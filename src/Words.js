@@ -8,23 +8,25 @@ const Words = () => {
   const [groups, setGroups] = useState([]);
   const [words, setWords] = useState([]);
   useEffect(() => {
-    const w = storage.getWords()
-    const a = storage.getProgress()
-    const words = w
-      .map(it => {
-        const progress = a[it.word]
-        const success = progress ? progress.progress : 0
-        const shows = progress ? progress.schows : 0
-        return {...it, shows, success, progress: progress && !isNaN(success/shows) ? success/shows : 0 }
-      })
-
-    const g = w.reduce((result, item) => {
-      if (result.includes(item.group)) return result;
-      result.push(item.group)
-      return result;
-    }, [])
-    setGroups(g)
-    setWords(words)
+    (async () => {
+      const w = await storage.getWords()
+      const a = storage.getProgress()
+      const words = w
+        .map(it => {
+          const progress = a[it.word]
+          const success = progress ? progress.progress : 0
+          const shows = progress ? progress.schows : 0
+          return {...it, shows, success, progress: progress && !isNaN(success/shows) ? success/shows : 0 }
+        })
+  
+      const g = w.reduce((result, item) => {
+        if (result.includes(item.group)) return result;
+        result.push(item.group)
+        return result;
+      }, [])
+      setGroups(g)
+      setWords(words)
+    })()
   }, [initinal])
   
   useEffect(() => { return () => { 

@@ -5,28 +5,30 @@ const Home = () => {
   const [words, setWords] = useState([]);
   const [progress, setProgress] = useState(null);
   useEffect(() => {
-    const w = storage.getWords()
-    const a = storage.getProgress()
-    setWords(w)
-    const g = w.reduce((result, item) => {
-      if (result.includes(item.group)) return result;
-      result.push(item.group)
-      return result;
-    }, [])
-    setGroups(g)
-    const globalProgress = {}
-    g.forEach(group => {
-      globalProgress[group] = 0
-      const groupWords = w.filter(it => it.group == group)
-      groupWords.forEach(word => {
-        const progress = a[word.word] ? a[word.word].progress : 0
-        const shows = a[word.word] ? a[word.word].schows : 0
-        const r = (a[word.word] && !isNaN(progress/shows) ? progress/shows : 0) * 100  
-        globalProgress[group] += r
+    (async () => {
+      const w = await storage.getWords()
+      const a = storage.getProgress()
+      setWords(w)
+      const g = w.reduce((result, item) => {
+        if (result.includes(item.group)) return result;
+        result.push(item.group)
+        return result;
+      }, [])
+      setGroups(g)
+      const globalProgress = {}
+      g.forEach(group => {
+        globalProgress[group] = 0
+        const groupWords = w.filter(it => it.group == group)
+        groupWords.forEach(word => {
+          const progress = a[word.word] ? a[word.word].progress : 0
+          const shows = a[word.word] ? a[word.word].schows : 0
+          const r = (a[word.word] && !isNaN(progress/shows) ? progress/shows : 0) * 100  
+          globalProgress[group] += r
+        })
+        globalProgress[group] = globalProgress[group] / groupWords.length
       })
-      globalProgress[group] = globalProgress[group] / groupWords.length
-    })
-    setProgress(globalProgress)
+      setProgress(globalProgress)
+    })()
   }, [])
   return (
     <div className="row">

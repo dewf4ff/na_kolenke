@@ -1,15 +1,16 @@
-import words from "../words.json"
+import Papa from "papaparse";
+const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSHSMmju12mbRUZW3kAkQsY0ddBD2UQhoftwc4QrPSAIRndkxOqmbvIMT3HG7H9kBXB6jkNl76C3vEw/pub?gid=0&single=true&output=csv'
 class Storage {
-  getWords() {
-    const rawData = localStorage.getItem('words')
-    if (!rawData) {
-      localStorage.setItem('words', JSON.stringify(words));
-      return words;
-    }
-    return JSON.parse(rawData)
-  }
-  setWords(data) {
-    localStorage.setItem('words', JSON.stringify(data))
+  async getWords() {
+    return new Promise((resolve) => {
+      Papa.parse(url, {
+        download: true,
+        header: true,
+        complete: (results) => {
+          resolve(results.data);
+        },
+      });  
+    })
   }
   getProgress() {
     const rawData = localStorage.getItem('progress')
