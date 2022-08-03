@@ -1,0 +1,18 @@
+html, body, #root, #root>div {
+  height: 100%;
+}
+
+.module {
+  height: calc(100% - 56px);
+}
+
+.word-card {
+  display: flex;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  min-height: 100px;
+  min-width: 200px;
+  background: #eee;
+  align-items: center;
+  justify-content: center;
+}
