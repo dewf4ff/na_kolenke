@@ -19,6 +19,8 @@ function TransitionTraining({ group, words, type, onFinish }) {
     const groupA = data.filter(it => (it.progress * 100) < 30)
     const groupB = data.filter(it => (it.progress * 100) < 90 && (it.progress * 100) >= 30)
     const groupC = data.filter(it => (it.progress * 100) >= 90)
+
+    console.log('groups', groupA, groupB, groupC, data, words)
     
     const used = []
     const training = []
@@ -67,9 +69,11 @@ function TransitionTraining({ group, words, type, onFinish }) {
       const delta = 10 - training.length
       for (let i=0; i<delta; i++) {
         const r = random(0, maxGroup[0].length - 1)
-        training.push({...maxGroup[0][r], answers: getAnswers(data, maxGroup[0][r], type)})
+        console.log('maxGroup', data, maxGroup, r)
+        //training.push({...maxGroup[0][r], answers: getAnswers(data, maxGroup[0][r], type)})
       }
     }
+    console.log('training',training)
     setTrainingWords(training)
     setReady(true)
     return () => { setCurrent(0) }

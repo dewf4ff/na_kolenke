@@ -18,14 +18,13 @@ const Home = () => {
       const globalProgress = {}
       g.forEach(group => {
         globalProgress[group] = 0
-        const groupWords = w.filter(it => it.group == group)
+        const groupWords = w.filter(it => it.group === group)
         groupWords.forEach(word => {
           const progress = a[word.word] ? a[word.word].progress : 0
           const shows = a[word.word] ? a[word.word].schows : 0
-          const r = shows < 5 ? 0 : (a[word.word] && !isNaN(progress/shows) ? progress/shows : 0) * 100 
-          globalProgress[group] += r
+          const r = (a[word.word] && !isNaN(progress/shows) ? progress/shows : 0) * 100
+          globalProgress[group] += shows > 5 && r >= 95 ? 1: 0
         })
-        globalProgress[group] = globalProgress[group] / groupWords.length
       })
       setProgress(globalProgress)
     })()
@@ -36,14 +35,15 @@ const Home = () => {
         {groups.map((it, i) => {
           const groupProgress = progress && progress[it] ? progress && progress[it] : 0
           const groupLength = words.filter(word => word.group === it).length
+          const groupPercentProgress = (groupProgress / groupLength) * 100
           return (
             <div key={i} className="row mt-3">
               <div className="col">{it}</div>
               <div className="col">Всего слов: {groupLength}</div>
-              <div className="col">Изучено: {`${groupProgress.toFixed(0)}%`} ({((groupLength / 100) *  groupProgress).toFixed(0)})</div>
+              <div className="col">Изучено: {`${groupPercentProgress}%`} ({groupProgress})</div>
               <div className="col">
                 <div className="progress">
-                  <div className="progress-bar" style={{width: `${groupProgress}%`}} role="progressbar"  aria-valuenow={`${groupProgress}`} aria-valuemin="0" aria-valuemax="100"></div>
+                  <div className="progress-bar" style={{width: `${groupPercentProgress}%`}} role="progressbar"  aria-valuenow={groupPercentProgress} aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
               </div>
             </div>

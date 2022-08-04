@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import TransitionTraining from "./components/translate";
 import storage from "./common/storage";
 
-export default () => {
+const Translation = () => {
   const [initinal, setInitinal] = useState(false);
   const [group, setGroup] = useState(false);
   const [groups, setGroups] = useState([]);
@@ -14,9 +14,9 @@ export default () => {
       const words = w
         .map(it => {
           const progress = a[it.word]
-          const success = progress ? progress.success : 0
+          const success = progress ? progress.progress : 0
           const shows = progress ? progress.schows : 0
-          return {...it, shows, success, progress: progress ? success/shows : 0 }
+          return {...it, shows, success, progress: progress && !isNaN(success/shows) ? success/shows : 0 }
         })
   
       const g = w.reduce((result, item) => {
@@ -82,3 +82,4 @@ export default () => {
     />
   )  
 };
+export default Translation;
