@@ -15,12 +15,11 @@ function TransitionTraining({ group, words, type, onFinish }) {
       2. GroupB Слова которые изучены от 30% до 90% - из них отбираем 30% для рандомайзера
       3. GroupC Слова которые изучены свыше 90% - из них отбираем 10% для рандомайзера
     */
-
     const data = words.filter(it => it.group == group)
     const groupA = data.filter(it => (it.progress * 100) < 30)
     const groupB = data.filter(it => (it.progress * 100) < 90 && (it.progress * 100) >= 30)
     const groupC = data.filter(it => (it.progress * 100) >= 90)
-
+    
     const used = []
     const training = []
     // Формируем слова для начального изучения 
@@ -65,20 +64,16 @@ function TransitionTraining({ group, words, type, onFinish }) {
     // Добавляем слова в тренировку если в какой-то из групп было меньше необходимого
     if (training.length < 10) {
       const maxGroup = [ groupA, groupB, groupC ].sort((a,b) => b.length - a.length)
-      const group = maxGroup[0]
       const delta = 10 - training.length
       for (let i=0; i<delta; i++) {
-        const r = random(0, group.length - 1)
-        training.push({...group[r], answers: getAnswers(group, words[r], type)})
+        const r = random(0, maxGroup[0].length - 1)
+        training.push({...maxGroup[0][r], answers: getAnswers(maxGroup[0], maxGroup[0][r], type)})
       }
     }
-    
-    console.log('training', training)
     setTrainingWords(training)
     setReady(true)
-
     return () => { setCurrent(0) }
-  }, [])
+  }, [group])
 
   const [trainingWords, setTrainingWords] = useState([]);
   const [current, setCurrent] = useState(0);
@@ -90,7 +85,6 @@ function TransitionTraining({ group, words, type, onFinish }) {
     for (let i=0; i < ln; i++) {
       const array = data.filter(it => !result.includes(it[param]))
       const r = random(0, array.length - 1)
-      console.log(param, array, r)
       result.push(array[r][param])
     }
     
@@ -103,23 +97,27 @@ function TransitionTraining({ group, words, type, onFinish }) {
     return result;
   }
 
-  const onAnswer = (answer) => {
-    if (currAnswer) return;
+  const setNext = () => {
     if (current < trainingWords.length - 1) {
-      if (answer == trainingWords[current].word || answer == trainingWords[current].translation) {
-        setResult([...result, { word: trainingWords[current].word, isRight: true }])
-        setCurrent(current + 1)
-      } else {
-        setResult([...result, { word: trainingWords[current].word, isRight: false }])
-        setAnswer(answer)
-        const timer = setTimeout(() => {
-          setAnswer(null)
-          clearTimeout(timer)
-          setCurrent(current + 1)
-        }, 2000)
-      }
+      setCurrent(current + 1)
     } else {
       onFinish(result)
+    }
+  }
+
+  const onAnswer = (answer) => {
+    if (currAnswer) return;
+    if (answer == trainingWords[current].word || answer == trainingWords[current].translation) {
+      setResult([...result, { word: trainingWords[current].word, isRight: true }])
+      setNext()
+    } else {
+      setResult([...result, { word: trainingWords[current].word, isRight: false }])
+      setAnswer(answer)
+      const timer = setTimeout(() => {
+        setAnswer(null)
+        clearTimeout(timer)
+        setNext()
+      }, 2000)
     }
   }
   const t = type == 'translation' ? 'word' : 'translation'
