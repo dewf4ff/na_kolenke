@@ -19,8 +19,6 @@ function TransitionTraining({ group, words, type, onFinish }) {
     const groupA = data.filter(it => (it.progress * 100) < 30)
     const groupB = data.filter(it => (it.progress * 100) < 90 && (it.progress * 100) >= 30)
     const groupC = data.filter(it => (it.progress * 100) >= 90)
-
-    console.log('groups', groupA, groupB, groupC, data, words)
     
     const used = []
     const training = []
@@ -69,11 +67,10 @@ function TransitionTraining({ group, words, type, onFinish }) {
       const delta = 10 - training.length
       for (let i=0; i<delta; i++) {
         const r = random(0, maxGroup[0].length - 1)
-        console.log('maxGroup', data, maxGroup, r)
-        //training.push({...maxGroup[0][r], answers: getAnswers(data, maxGroup[0][r], type)})
+        training.push({...maxGroup[0][r], answers: getAnswers(data, maxGroup[0][r], type)})
       }
     }
-    console.log('training',training)
+    
     setTrainingWords(training)
     setReady(true)
     return () => { setCurrent(0) }
@@ -102,7 +99,8 @@ function TransitionTraining({ group, words, type, onFinish }) {
     return result;
   }
 
-  const setNext = () => {
+  const setNext = (result) => {
+    setResult(result)
     if (current < trainingWords.length - 1) {
       setCurrent(current + 1)
     } else {
@@ -111,17 +109,18 @@ function TransitionTraining({ group, words, type, onFinish }) {
   }
 
   const onAnswer = (answer) => {
+    const currResult = [...result]
     if (currAnswer) return;
     if (answer === trainingWords[current].word || answer === trainingWords[current].translation) {
-      setResult([...result, { word: trainingWords[current].word, isRight: true }])
-      setNext()
+      currResult.push({ word: trainingWords[current].word, isRight: true })
+      setNext(currResult)
     } else {
-      setResult([...result, { word: trainingWords[current].word, isRight: false }])
+      currResult.push({ word: trainingWords[current].word, isRight: false })
       setAnswer(answer)
       const timer = setTimeout(() => {
         setAnswer(null)
         clearTimeout(timer)
-        setNext()
+        setNext(currResult)
       }, 2000)
     }
   }

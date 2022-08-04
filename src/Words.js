@@ -51,6 +51,7 @@ const Words = () => {
       a[it.word].schows += 1
       a[it.word].progress += it.isRight ? 1 : 0
     })
+    console.log('onFinish', result, a)
     storage.setProgress(a)
     setInitinal(false)
   }
