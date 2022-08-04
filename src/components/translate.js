@@ -79,6 +79,7 @@ function TransitionTraining({ group, words, type, onFinish }) {
   const [current, setCurrent] = useState(0);
 
   const getAnswers = (array, el, param) => {
+    console.log(el, param)
     const result = [el[param]]
     const data = array.filter(it => it.word != el.word)
     const ln = data.length > 3 ? 3 : data.length
