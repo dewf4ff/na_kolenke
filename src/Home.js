@@ -16,20 +16,22 @@ const Home = () => {
       }, [])
       setGroups(g)
       const globalProgress = {}
-      let maxShow = 0
-      Object.keys(a).forEach(word => {
-        if (a[word].shows > maxShow) {
-          maxShow = a[word].shows
-        }
-      })
       g.forEach(group => {
+        let maxShow = 0
+        Object.keys(a).forEach(word => {
+          if (a[word].shows > maxShow && w.find(it => it.word === word).group === group) {
+            maxShow = a[word].shows
+          }
+        })
+        maxShow = Math.trunc(maxShow / 2)
         globalProgress[group] = 0
         const groupWords = w.filter(it => it.group === group)
+
         groupWords.forEach(word => {
           const progress = a[word.word] ? a[word.word].progress : 0
           const shows = a[word.word] ? a[word.word].schows : 0
           const r = (a[word.word] && !isNaN(progress/shows) ? progress/shows : 0) * 100
-          globalProgress[group] += shows > 5 && r >= 93 ? 1: 0
+          globalProgress[group] += shows >= maxShow && r >= 93 ? 1: 0
         })
       })
       setProgress(globalProgress)
