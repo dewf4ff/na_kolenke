@@ -15,7 +15,7 @@ function TransitionTraining({ group, words, type, onFinish }) {
       2. GroupB Слова которые изучены от 30% до 90% - из них отбираем 30% для рандомайзера
       3. GroupC Слова которые изучены свыше 90% - из них отбираем 10% для рандомайзера
     */
-    const data = words.filter(it => it.group == group)
+    const data = words.filter(it => it.group === group)
     const groupA = data.filter(it => (it.progress * 100) < 30)
     const groupB = data.filter(it => (it.progress * 100) < 90 && (it.progress * 100) >= 30)
     const groupC = data.filter(it => (it.progress * 100) >= 90)
@@ -81,7 +81,7 @@ function TransitionTraining({ group, words, type, onFinish }) {
   const getAnswers = (array, el, param) => {
     console.log(1, el, param)
     const result = [el[param]]
-    const data = array.filter(it => it.word != el.word)
+    const data = array.filter(it => it.word !== el.word)
     const ln = data.length > 3 ? 3 : data.length
     for (let i=0; i < ln; i++) {
       const array = data.filter(it => !result.includes(it[param]))
@@ -90,7 +90,7 @@ function TransitionTraining({ group, words, type, onFinish }) {
     }
     
     let currentIndex = result.length,  randomIndex;
-    while (currentIndex != 0) {
+    while (currentIndex !== 0) {
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
       [result[currentIndex], result[randomIndex]] = [result[randomIndex], result[currentIndex]];
@@ -108,7 +108,7 @@ function TransitionTraining({ group, words, type, onFinish }) {
 
   const onAnswer = (answer) => {
     if (currAnswer) return;
-    if (answer == trainingWords[current].word || answer == trainingWords[current].translation) {
+    if (answer === trainingWords[current].word || answer === trainingWords[current].translation) {
       setResult([...result, { word: trainingWords[current].word, isRight: true }])
       setNext()
     } else {
@@ -121,15 +121,15 @@ function TransitionTraining({ group, words, type, onFinish }) {
       }, 2000)
     }
   }
-  const t = type == 'translation' ? 'word' : 'translation'
+  const t = type === 'translation' ? 'word' : 'translation'
   if (!ready) return null;
 
   const getButtonStyle = (val) => {
     if (!currAnswer) return 'btn btn-outline-secondary';
-    if (trainingWords[current][type] == val) {
+    if (trainingWords[current][type] === val) {
       return 'btn btn-success'
     }
-    if (currAnswer == val) {
+    if (currAnswer === val) {
       return 'btn btn-danger'
     }
     return 'btn btn-outline-secondary'

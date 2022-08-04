@@ -22,7 +22,7 @@ const Home = () => {
         groupWords.forEach(word => {
           const progress = a[word.word] ? a[word.word].progress : 0
           const shows = a[word.word] ? a[word.word].schows : 0
-          const r = (a[word.word] && !isNaN(progress/shows) ? progress/shows : 0) * 100  
+          const r = shows < 5 ? 0 : (a[word.word] && !isNaN(progress/shows) ? progress/shows : 0) * 100 
           globalProgress[group] += r
         })
         globalProgress[group] = globalProgress[group] / groupWords.length
