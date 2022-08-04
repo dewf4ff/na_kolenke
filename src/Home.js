@@ -37,7 +37,7 @@ const Home = () => {
           <div key={i} className="row mt-3">
             <div className="col">{it}</div>
             <div className="col">Всего слов: {words.filter(word => word.group === it).length}</div>
-            <div className="col">Изучено: {progress && progress[it] ? `${progress[it].toFixed(2)}%` : '0%'}</div>
+            <div className="col">Изучено: {progress && progress[it] ? `${progress[it].toFixed(2)}%` : '0%'} ({((words.filter(word => word.group === it).length / 100) *  progress && progress[it] ? progress && progress[it] : 0).toFixed(0)})</div>
             <div className="col">
               <div className="progress">
                 <div className="progress-bar" style={{width: progress && progress[it] ? `${progress[it]}%` : '0%'}} role="progressbar"  aria-valuenow={progress && progress[it] ? `${progress[it]}%` : '0'} aria-valuemin="0" aria-valuemax="100"></div>
