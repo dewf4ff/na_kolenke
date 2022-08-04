@@ -31,7 +31,7 @@ function TransitionTraining({ group, words, type, onFinish }) {
         if (!words.length) break;
         const r = random(0, words.length - 1)
         used.push(words[r].word)
-        training.push({...words[r], answers: getAnswers(groupA, words[r], type)})
+        training.push({...words[r], answers: getAnswers(data, words[r], type)})
       }
     }
 
@@ -44,7 +44,7 @@ function TransitionTraining({ group, words, type, onFinish }) {
         if (!words.length) break;
         const r = random(0, words.length - 1)
         used.push(words[r].word)
-        training.push({...words[r], answers: getAnswers(groupB, words[r], type)})
+        training.push({...words[r], answers: getAnswers(data, words[r], type)})
       }
     }
 
@@ -57,7 +57,7 @@ function TransitionTraining({ group, words, type, onFinish }) {
         if (!words.length) break;
         const r = random(0, words.length - 1)
         used.push(words[r].word)
-        training.push({...words[r], answers: getAnswers(groupC, words[r].word, type)})
+        training.push({...words[r], answers: getAnswers(data, words[r], type)})
       }
     }
 
@@ -67,7 +67,7 @@ function TransitionTraining({ group, words, type, onFinish }) {
       const delta = 10 - training.length
       for (let i=0; i<delta; i++) {
         const r = random(0, maxGroup[0].length - 1)
-        training.push({...maxGroup[0][r], answers: getAnswers(maxGroup[0], maxGroup[0][r], type)})
+        training.push({...maxGroup[0][r], answers: getAnswers(data, maxGroup[0][r], type)})
       }
     }
     setTrainingWords(training)
@@ -79,7 +79,7 @@ function TransitionTraining({ group, words, type, onFinish }) {
   const [current, setCurrent] = useState(0);
 
   const getAnswers = (array, el, param) => {
-    console.log(el, param)
+    console.log(1, el, param)
     const result = [el[param]]
     const data = array.filter(it => it.word != el.word)
     const ln = data.length > 3 ? 3 : data.length

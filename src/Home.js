@@ -33,18 +33,22 @@ const Home = () => {
   return (
     <div className="row">
       <div className="col">
-        {groups.map((it, i) => (
-          <div key={i} className="row mt-3">
-            <div className="col">{it}</div>
-            <div className="col">Всего слов: {words.filter(word => word.group === it).length}</div>
-            <div className="col">Изучено: {progress && progress[it] ? `${progress[it].toFixed(2)}%` : '0%'} ({((words.filter(word => word.group === it).length / 100) *  progress && progress[it] ? progress && progress[it] : 0).toFixed(0)})</div>
-            <div className="col">
-              <div className="progress">
-                <div className="progress-bar" style={{width: progress && progress[it] ? `${progress[it]}%` : '0%'}} role="progressbar"  aria-valuenow={progress && progress[it] ? `${progress[it]}%` : '0'} aria-valuemin="0" aria-valuemax="100"></div>
+        {groups.map((it, i) => {
+          const groupProgress = progress && progress[it] ? progress && progress[it] : 0
+          const groupLength = words.filter(word => word.group === it).length
+          return (
+            <div key={i} className="row mt-3">
+              <div className="col">{it}</div>
+              <div className="col">Всего слов: {groupLength}</div>
+              <div className="col">Изучено: {`${groupProgress.toFixed(0)}%`} ({((groupLength / 100) *  groupProgress).toFixed(0)})</div>
+              <div className="col">
+                <div className="progress">
+                  <div className="progress-bar" style={{width: `${groupProgress}%`}} role="progressbar"  aria-valuenow={`${groupProgress}`} aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )
