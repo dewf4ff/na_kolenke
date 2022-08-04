@@ -29,7 +29,7 @@ const Home = () => {
           const progress = a[word.word] ? a[word.word].progress : 0
           const shows = a[word.word] ? a[word.word].schows : 0
           const r = (a[word.word] && !isNaN(progress/shows) ? progress/shows : 0) * 100
-          globalProgress[group] += shows > (maxShow / 10) && shows > 5 && r >= 95 ? 1: 0
+          globalProgress[group] += shows > (maxShow / 10) && shows > 3 && r >= 95 ? 1: 0
         })
       })
       setProgress(globalProgress)
@@ -46,7 +46,7 @@ const Home = () => {
             <div key={i} className="row mt-3">
               <div className="col">{it}</div>
               <div className="col">Всего слов: {groupLength}</div>
-              <div className="col">Изучено: {`${groupPercentProgress}%`} ({groupProgress})</div>
+              <div className="col">Изучено: {`${groupPercentProgress.toFixed(2)}%`} ({groupProgress})</div>
               <div className="col">
                 <div className="progress">
                   <div className="progress-bar" style={{width: `${groupPercentProgress}%`}} role="progressbar"  aria-valuenow={groupPercentProgress} aria-valuemin="0" aria-valuemax="100"></div>
