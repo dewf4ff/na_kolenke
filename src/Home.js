@@ -21,15 +21,15 @@ const Home = () => {
         Object.keys(a).forEach(word => {
           if (a[word].shows > maxShow && w.find(it => it.word === word).group === group) {
             maxShow = a[word].shows
+            console.log(333, maxShow)
           }
         })
-        maxShow = Math.trunc(maxShow / 2)
+        maxShow = Math.trunc(maxShow / 4) > 2 ? Math.trunc(maxShow / 4) : 2
         globalProgress[group] = 0
         const groupWords = w.filter(it => it.group === group)
-
         groupWords.forEach(word => {
           const progress = a[word.word] ? a[word.word].progress : 0
-          const shows = a[word.word] ? a[word.word].schows : 0
+          const shows = a[word.word] ? a[word.word].shows : 0
           const r = (a[word.word] && !isNaN(progress/shows) ? progress/shows : 0) * 100
           globalProgress[group] += shows >= maxShow && r >= 93 ? 1: 0
         })

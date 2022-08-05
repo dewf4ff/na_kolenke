@@ -15,7 +15,7 @@ const Translation = () => {
         .map(it => {
           const progress = a[it.word]
           const success = progress ? progress.progress : 0
-          const shows = progress ? progress.schows : 0
+          const shows = progress ? progress.shows : 0
           return {...it, shows, success, progress: progress && !isNaN(success/shows) ? success/shows : 0 }
         })
   
@@ -44,11 +44,11 @@ const Translation = () => {
     result.forEach(it => {
       if (!a[it.word]) {
         a[it.word] = {
-          schows: 0,
+          shows: 0,
           progress: 0
         }
       }
-      a[it.word].schows += 1
+      a[it.word].shows += 1
       a[it.word].progress += it.isRight ? 1 : 0
     })
     console.log('onFinish', result, a)
