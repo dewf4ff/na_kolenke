@@ -21,7 +21,6 @@ const Home = () => {
         Object.keys(a).forEach(word => {
           if (a[word].shows > maxShow && w.find(it => it.word === word).group === group) {
             maxShow = a[word].shows
-            console.log(333, maxShow)
           }
         })
         maxShow = Math.trunc(maxShow / 4) > 2 ? Math.trunc(maxShow / 4) : 2
