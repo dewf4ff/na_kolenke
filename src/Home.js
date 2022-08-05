@@ -19,7 +19,8 @@ const Home = () => {
       g.forEach(group => {
         let maxShow = 0
         Object.keys(a).forEach(word => {
-          if (a[word].shows > maxShow && w.find(it => it.word === word).group === group) {
+          const originalWord = w.find(it => it.word === word)
+          if (a[word].shows > maxShow && originalWord && originalWord.group === group) {
             maxShow = a[word].shows
           }
         })
