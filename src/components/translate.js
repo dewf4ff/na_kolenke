@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react"
 
+const PERCENT = [20, 60,  20]
 const random = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function TransitionTraining({ group, words, type, onFinish }) {
+function TransitionTraining({ group, words, type, onFinish, count }) {
   const [ready, setReady] = useState(false)
   const [result, setResult] = useState([])
   const [currAnswer, setAnswer] = useState(null)
@@ -22,11 +23,15 @@ function TransitionTraining({ group, words, type, onFinish }) {
     
     const used = []
     const training = []
+    const groupAln = Math.trunc(count/100*PERCENT[0])
+    const groupBln = Math.trunc(count/100*PERCENT[1])
+    const groupCln = Math.trunc(count/100*PERCENT[2])
+
     // Формируем слова для начального изучения 
-    if (groupA.length <= 7) {
+    if (groupA.length <= groupAln) {
       groupA.forEach(it => training.push({...it, answers: getAnswers(data, it, type)}))
     } else {
-      for (let i=0; i<7; i++) {
+      for (let i=0; i<groupAln; i++) {
         const words = groupA.filter(it => !used.includes(it.word))
         if (!words.length) break;
         const r = random(0, words.length - 1)
@@ -36,10 +41,10 @@ function TransitionTraining({ group, words, type, onFinish }) {
     }
 
     // Формируем слова для запоминания 
-    if (groupB.length <= 3) {
+    if (groupB.length <= groupBln) {
       groupB.forEach(it => training.push({...it, answers: getAnswers(data, it, type)}))
     } else {
-      for (let i=0; i<3; i++) {
+      for (let i=0; i<groupBln; i++) {
         const words = groupB.filter(it => !used.includes(it.word))
         if (!words.length) break;
         const r = random(0, words.length - 1)
@@ -49,10 +54,10 @@ function TransitionTraining({ group, words, type, onFinish }) {
     }
 
     // Формируем слова для повторения 
-    if (groupC.length <= 1) {
+    if (groupC.length <= groupCln) {
       groupC.forEach(it => training.push({...it, answers: getAnswers(data, it, type)}))
     } else {
-      for (let i=0; i<1; i++) {
+      for (let i=0; i<groupCln; i++) {
         const words = groupC.filter(it => !used.includes(it.word))
         if (!words.length) break;
         const r = random(0, words.length - 1)
@@ -62,9 +67,9 @@ function TransitionTraining({ group, words, type, onFinish }) {
     }
 
     // Добавляем слова в тренировку если в какой-то из групп было меньше необходимого
-    if (training.length < 10) {
+    if (training.length < count) {
       const maxGroup = [ groupA, groupB, groupC ].sort((a,b) => b.length - a.length)
-      const delta = 10 - training.length
+      const delta = count - training.length
       for (let i=0; i<delta; i++) {
         const r = random(0, maxGroup[0].length - 1)
         training.push({...maxGroup[0][r], answers: getAnswers(data, maxGroup[0][r], type)})
@@ -80,7 +85,6 @@ function TransitionTraining({ group, words, type, onFinish }) {
   const [current, setCurrent] = useState(0);
 
   const getAnswers = (array, el, param) => {
-    console.log(1, el, param)
     const result = [el[param]]
     const data = array.filter(it => it.word !== el.word)
     const ln = data.length > 3 ? 3 : data.length

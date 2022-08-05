@@ -51,7 +51,6 @@ const Words = () => {
       a[it.word].shows += 1
       a[it.word].progress += it.isRight ? 1 : 0
     })
-    console.log('onFinish', result, a)
     storage.setProgress(a)
     setInitinal(false)
   }
@@ -78,6 +77,7 @@ const Words = () => {
     <TransitionTraining 
       words={words} 
       group={group}
+      count={10}
       type={'translation'}
       ready={initinal}
       onFinish={onFinish} 
