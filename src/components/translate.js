@@ -1,82 +1,46 @@
 import React, { useState, useEffect } from "react"
 
-const PERCENT = [20, 60,  20]
 const random = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function TransitionTraining({ group, words, type, onFinish, count }) {
+function TransitionTraining({ group, words, type, onFinish, count, training }) {
   const [ready, setReady] = useState(false)
   const [result, setResult] = useState([])
   const [currAnswer, setAnswer] = useState(null)
   useEffect(() => {
-    /*
-      Выделяем 3 группы:
-      1. GroupA Слова которые изучены меньше 30% - из них отбираем 60% для рандомайзера
-      2. GroupB Слова которые изучены от 30% до 90% - из них отбираем 30% для рандомайзера
-      3. GroupC Слова которые изучены свыше 90% - из них отбираем 10% для рандомайзера
-    */
-    const data = words.filter(it => it.group === group)
-    const groupA = data.filter(it => (it.progress * 100) < 30)
-    const groupB = data.filter(it => (it.progress * 100) < 90 && (it.progress * 100) >= 30)
-    const groupC = data.filter(it => (it.progress * 100) >= 90)
-    
+    const groupB = words.filter(word => word.group === group && word.progress * 100 > 95)    
+    const trainingWords = []
     const used = []
-    const training = []
-    const groupAln = Math.trunc(count/100*PERCENT[0])
-    const groupBln = Math.trunc(count/100*PERCENT[1])
-    const groupCln = Math.trunc(count/100*PERCENT[2])
-
-    // Формируем слова для начального изучения 
-    if (groupA.length <= groupAln) {
-      groupA.forEach(it => training.push({...it, answers: getAnswers(data, it, type)}))
-    } else {
-      for (let i=0; i<groupAln; i++) {
-        const words = groupA.filter(it => !used.includes(it.word))
-        if (!words.length) break;
-        const r = random(0, words.length - 1)
-        used.push(words[r].word)
-        training.push({...words[r], answers: getAnswers(data, words[r], type)})
-      }
-    }
-
-    // Формируем слова для запоминания 
+    const used2 = []
+    const groupBln = Math.trunc(count/100*20)
+    
+    // Выбираем слова для повторения
     if (groupB.length <= groupBln) {
-      groupB.forEach(it => training.push({...it, answers: getAnswers(data, it, type)}))
+      groupB.forEach(it => trainingWords.push({...it, answers: getAnswers(training[group], it, type)}))
     } else {
       for (let i=0; i<groupBln; i++) {
         const words = groupB.filter(it => !used.includes(it.word))
         if (!words.length) break;
         const r = random(0, words.length - 1)
         used.push(words[r].word)
-        training.push({...words[r], answers: getAnswers(data, words[r], type)})
+        trainingWords.push({...words[r], answers: getAnswers(training[group], words[r], type)})
       }
     }
 
-    // Формируем слова для повторения 
-    if (groupC.length <= groupCln) {
-      groupC.forEach(it => training.push({...it, answers: getAnswers(data, it, type)}))
-    } else {
-      for (let i=0; i<groupCln; i++) {
-        const words = groupC.filter(it => !used.includes(it.word))
-        if (!words.length) break;
-        const r = random(0, words.length - 1)
-        used.push(words[r].word)
-        training.push({...words[r], answers: getAnswers(data, words[r], type)})
-      }
+    // Выбираем слова для изучения
+    const delta = count-trainingWords.length
+    for (let i=0; i<delta; i++) {
+      const words = training[group].filter(it => !used2.includes(it.word))
+      if (!words.length) break;
+      const r = random(0, words.length - 1)
+      used2.push(words[r].word)
+      trainingWords.push({...words[r], answers: getAnswers(training[group], words[r], type)})
     }
 
-    // Добавляем слова в тренировку если в какой-то из групп было меньше необходимого
-    if (training.length < count) {
-      const maxGroup = [ groupA, groupB, groupC ].sort((a,b) => b.length - a.length)
-      const delta = count - training.length
-      for (let i=0; i<delta; i++) {
-        const r = random(0, maxGroup[0].length - 1)
-        training.push({...maxGroup[0][r], answers: getAnswers(data, maxGroup[0][r], type)})
-      }
-    }
-    
-    setTrainingWords(training)
+    console.log('OK', trainingWords)
+
+    setTrainingWords(trainingWords)
     setReady(true)
     return () => { setCurrent(0) }
   }, [group])
@@ -108,7 +72,18 @@ function TransitionTraining({ group, words, type, onFinish, count }) {
     if (current < trainingWords.length - 1) {
       setCurrent(current + 1)
     } else {
-      onFinish(result)
+      const progress = {}
+      result.forEach(it => {
+        if (!progress[it.word]) {
+          progress[it.word] = {
+            shows: 0,
+            progress: 0
+          }
+        }
+        progress[it.word].shows += 1
+        progress[it.word].progress += it.isRight ? 1 : 0
+      })
+      onFinish(progress)
     }
   }
 

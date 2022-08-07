@@ -20,6 +20,14 @@ class Storage {
   setProgress(data) {
     localStorage.setItem('progress', JSON.stringify(data))
   }
+  getGroup() {
+    const rawData = localStorage.getItem('group')
+    if (!rawData) return null
+    return JSON.parse(rawData)
+  }
+  setGroup(group) {
+    localStorage.setItem('group', JSON.stringify(group))
+  }
 }
 const storage = new Storage()
 export default storage
