@@ -39,7 +39,7 @@ function App() {
       trainingGroups[group] = trainingGroups[group].filter(word => {
         if (!rawProgress[word.word]) return true;
         const progress = rawProgress[word.word].progress / rawProgress[word.word].shows
-        if ((isNaN(progress) || progress < 0.95) && rawProgress[word.word].shows > 10) return true;
+        if (isNaN(progress) || progress < 0.95 || rawProgress[word.word].shows < 10) return true;
         console.log('Изучено: ', word.word, progress)
         return false;
       })
