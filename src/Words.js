@@ -19,8 +19,8 @@ const Words = ({ words, groups, trainingGroups, onChange }) => {
   
   if (!initinal) {
     return (
-      <div className="module row align-items-center">
-        <div className="col-4 offset-4 justify-content-center">
+      <div className="module row align-items-center mt-3">
+        <div className="col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-12 offset-sm-0 justify-content-center">
           <div className="row">
             <div className="col">
               <div className="d-grid gap-2">

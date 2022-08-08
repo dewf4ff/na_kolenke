@@ -34,10 +34,10 @@ const Home = ({ groups, words }) => {
           const groupPercentProgress = (groupProgress / groupLength) * 100
           return (
             <div key={i} className="row mt-3">
-              <div className="col">{it}</div>
-              <div className="col">Всего слов: {groupLength}</div>
-              <div className="col">Изучено: {`${groupPercentProgress.toFixed(2)}%`} ({groupProgress})</div>
-              <div className="col">
+              <div className="col-4">{it}</div>
+              <div className="col-3">Всего слов: {groupLength}</div>
+              <div className="col-3">Изучено: {`${groupPercentProgress.toFixed(2)}%`} ({groupProgress})</div>
+              <div className="col-2">
                 <div className="progress">
                   <div className="progress-bar" style={{width: `${groupPercentProgress}%`}} role="progressbar"  aria-valuenow={groupPercentProgress} aria-valuemin="0" aria-valuemax="100"></div>
                 </div>

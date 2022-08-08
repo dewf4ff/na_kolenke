@@ -96,23 +96,25 @@ function App() {
   if (!data) return null;
   return (
     <Router>
+      
       <div className="container">
         <div className="row">
-          <div className="col">
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
-              <Link to="/" className="navbar-brand">Wörtertrainer</Link>
-              <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul className="navbar-nav mr-auto">
-                  <li className="nav-item active">
-                    <Link to="/words" className="nav-link">Words</Link>
-                  </li>
-                  <li className="nav-item active">
-                    <Link to="/translation" className="nav-link">Translation</Link>
-                  </li>
-                </ul>
-              </div>
-            </nav>
-          </div>
+          <nav className="navbar navbar-expand-lg navbar-expand-md navbar-light bg-light">
+            <Link to="/" className="navbar-brand">Wörtertrainer</Link>
+            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            <div className="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul className="navbar-nav mr-auto">
+                <li className="nav-item">
+                  <Link to="/words" className="nav-link">Words</Link>
+                </li>
+                <li className="nav-item">
+                  <Link to="/translation" className="nav-link">Translation</Link>
+                </li>
+              </ul>
+            </div>
+          </nav>
         </div>
         <Routes>
           <Route path="/" element={<Home groups={data.groups} words={data.words} />} />
