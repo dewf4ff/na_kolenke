@@ -115,7 +115,7 @@ function App() {
           </div>
         </div>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home groups={data.groups} words={data.words} />} />
           <Route path="/words" element={<Words onChange={onChange} words={data.words} groups={data.groups} trainingGroups={data.trainingGroups} />} />
           <Route path="/translation" element={<Translation onChange={onChange} words={data.words} groups={data.groups} trainingGroups={data.trainingGroups}/>} />
         </Routes>
