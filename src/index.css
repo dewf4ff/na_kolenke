@@ -2,6 +2,11 @@ html, body, #root, #root>div {
   height: 100%;
 }
 
+.btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 .module {
   height: calc(100% - 56px);
 }
