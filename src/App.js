@@ -11,6 +11,7 @@ function App() {
   const prepareWords = async () => {
     const rawWords = await storage.getWords()
     const rawProgress = storage.getProgress()
+
     let trainingGroups = storage.getGroup()
     if (!trainingGroups) {
       trainingGroups = {}
@@ -30,11 +31,37 @@ function App() {
       return result
     }, { words: [], groups: [] })
     
+    // Исключаем из группы уже изученные слова
+    groups.forEach(group => {
+      if (trainingGroups[group].length > COUNT * 2) {
+        trainingGroups[group] = []
+      }
+      trainingGroups[group] = trainingGroups[group].filter(word => {
+        if (!rawProgress[word.word]) return true;
+        const progress = rawProgress[word.word].progress / rawProgress[word.word].shows
+        if ((isNaN(progress) || progress < 0.95) && rawProgress[word.word].shows > 10) return true;
+        console.log('Изучено: ', word.word, progress)
+        return false;
+      })
+    })
     // Наполняем группы если они пустые
     groups.forEach(group => {
+      const training = words.filter(word => word.group === group).sort((a,b) => a.progress - b.progress)
       if (!trainingGroups[group].length) {
-        const training = words.filter(word => word.group === group).sort((a,b) => a.progress - b.progress).slice(0, COUNT * 2);
-        training.forEach(word => trainingGroups[group].push({ group: word.group, word: word.word, translation: word.translation }))
+        training.slice(0, COUNT * 2).forEach(word => trainingGroups[group].push({ group: word.group, word: word.word, translation: word.translation }));
+      } else if (trainingGroups[group].length < COUNT * 2) {
+        const additional = training.filter(it => {
+          const exists = trainingGroups[group].find(item => item.word === it.word)
+          const shows = rawProgress[it.word] ? rawProgress[it.word].shows : 0
+          const progress = rawProgress[it.word] ? rawProgress[it.word].progress : 0
+          const progressValue = isNaN(progress / shows) ? progress / shows : 0
+          if (exists || progressValue < 0.95) return false
+          return true
+        });
+        if (!additional.length) return;
+        const delta = (COUNT * 2) - trainingGroups[group].length
+        additional.slice(0, delta).forEach(word => trainingGroups[group].push({ group: word.group, word: word.word, translation: word.translation }));
+        console.log(`Добавили новые слова (${delta}) к изучению`, group, trainingGroups[group].length)
       }
     })
     return { words, groups, trainingGroups }
@@ -59,10 +86,9 @@ function App() {
       rawProgress[word].progress += result[word].progress
       rawProgress[word].shows += result[word].shows
     })
-    
+    storage.setProgress(rawProgress)
     prepareWords().then(res => {
       storage.setGroup(res.trainingGroups)
-      storage.setProgress(rawProgress) 
       setData(res)
     })
   }
