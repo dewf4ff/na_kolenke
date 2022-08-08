@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-
+import Button from 'react-bootstrap/Button';
 const random = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -107,14 +107,14 @@ function TransitionTraining({ group, words, type, onFinish, count, training }) {
   if (!ready) return null;
 
   const getButtonStyle = (val) => {
-    if (!currAnswer) return 'btn btn-outline-secondary';
+    if (!currAnswer) return 'outline-secondary';
     if (trainingWords[current][type] === val) {
-      return 'btn btn-success'
+      return 'success'
     }
     if (currAnswer === val) {
-      return 'btn btn-danger'
+      return 'danger'
     }
-    return 'btn btn-outline-secondary'
+    return 'outline-secondary'
   }
   
   return (
@@ -131,9 +131,7 @@ function TransitionTraining({ group, words, type, onFinish, count, training }) {
           <div className="row" key={i}>
             <div className="col gy-2">
               <div className="d-grid gap-2">
-                <button 
-                  className={getButtonStyle(it)} 
-                  onClick={() => onAnswer(it)}>{it}</button>  
+                <Button variant={getButtonStyle(it)} onClick={() => onAnswer(it)}>{it}</Button>
               </div>
             </div>  
           </div>
