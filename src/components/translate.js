@@ -87,8 +87,9 @@ function TransitionTraining({ group, words, type, onFinish, count, training }) {
     }
   }
 
-  const onAnswer = (answer) => {
+  const onAnswer = (answer, event) => {
     const currResult = [...result]
+    event.currentTarget.blur();
     if (currAnswer) return;
     if (answer === trainingWords[current].word || answer === trainingWords[current].translation) {
       currResult.push({ word: trainingWords[current].word, isRight: true })
@@ -134,7 +135,7 @@ function TransitionTraining({ group, words, type, onFinish, count, training }) {
                 <button 
                   type="button"
                   className={getButtonStyle(it)} 
-                  onClick={() => onAnswer(it)}>{it}</button>  
+                  onClick={(event) => onAnswer(it, event)}>{it}</button>  
               </div>
             </div>  
           </div>
