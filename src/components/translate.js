@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 
 const random = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function TransitionTraining({ group, words, type, onFinish, count, training }) {
+  const containerRef = useRef(null)
   const [ready, setReady] = useState(false)
   const [result, setResult] = useState([])
   const [currAnswer, setAnswer] = useState(null)
@@ -90,6 +91,9 @@ function TransitionTraining({ group, words, type, onFinish, count, training }) {
   const onAnswer = (answer, event) => {
     const currResult = [...result]
     event.currentTarget.blur();
+    if (containerRef.current) {
+      containerRef.current.focus();
+    }
     if (currAnswer) return;
     if (answer === trainingWords[current].word || answer === trainingWords[current].translation) {
       currResult.push({ word: trainingWords[current].word, isRight: true })
@@ -119,7 +123,7 @@ function TransitionTraining({ group, words, type, onFinish, count, training }) {
   }
   
   return (
-    <div className="module row align-items-center mt-3">
+    <div className="module row align-items-center mt-3" ref={containerRef}>
       <div className="col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-12 offset-sm-0 justify-content-center">
         <div className="row">
           <div className="col mb-5">
