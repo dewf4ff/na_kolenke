@@ -20,7 +20,7 @@ const Home = ({ groups, words }) => {
         const progress = a[word.word] ? a[word.word].progress : 0
         const shows = a[word.word] ? a[word.word].shows : 0
         const r = (a[word.word] && !isNaN(progress/shows) ? progress/shows : 0) * 100
-        globalProgress[group] += shows >= maxShow && r >= 95 ? 1: 0
+        globalProgress[group] += shows >= 10 && r >= 95 ? 1: 0
       })
     })
     setProgress(globalProgress)
