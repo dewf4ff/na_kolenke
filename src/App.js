@@ -31,12 +31,13 @@ function App() {
       return result
     }, { words: [], groups: [] })
     
-    // Исключаем из группы уже изученные слова
+    // Исключаем из группы уже изученные слова или слова которых уже нет в словаре
     groups.forEach(group => {
       if (trainingGroups[group].length > COUNT * 2) {
         trainingGroups[group] = []
       }
       trainingGroups[group] = trainingGroups[group].filter(word => {
+        if (!words.find(it => it.word === word.word)) return false;
         if (!rawProgress[word.word]) return true;
         const progress = rawProgress[word.word].progress / rawProgress[word.word].shows
         if (isNaN(progress) || progress < 0.95 || rawProgress[word.word].shows < 10) return true;
@@ -44,8 +45,14 @@ function App() {
         return false;
       })
     })
-    // Наполняем группы если они пустые
+    // Наполняем группы если они пустые, а также обновляем переводы
     groups.forEach(group => {
+      trainingGroups[group].forEach((item, ind) => {
+        const word = words.find(it => it.word === item.word);
+        if (word) {
+          trainingGroups[group][ind].translation = word.translation
+        }
+      })
       const training = words.filter(word => word.group === group).sort((a,b) => a.progress - b.progress)
       if (!trainingGroups[group].length) {
         training.slice(0, COUNT * 2).forEach(word => trainingGroups[group].push({ group: word.group, word: word.word, translation: word.translation }));
