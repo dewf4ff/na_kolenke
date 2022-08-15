@@ -2,8 +2,14 @@ import Papa from "papaparse";
 const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSHSMmju12mbRUZW3kAkQsY0ddBD2UQhoftwc4QrPSAIRndkxOqmbvIMT3HG7H9kBXB6jkNl76C3vEw/pub?gid=0&single=true&output=csv'
 class Storage {
   async getWords() {
+    const additionalUrl = localStorage.getItem("url")
+    if (additionalUrl) {
+      console.log('Load from url:', additionalUrl)
+    } else {
+      console.log('Load from default url')
+    }
     return new Promise((resolve) => {
-      Papa.parse(url, {
+      Papa.parse(additionalUrl ? additionalUrl : url, {
         download: true,
         header: true,
         complete: (results) => {
