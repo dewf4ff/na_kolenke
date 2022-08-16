@@ -10,11 +10,11 @@ function TransitionTraining({ group, words, type, onFinish, count, training }) {
   const [result, setResult] = useState([])
   const [currAnswer, setAnswer] = useState(null)
   useEffect(() => {
-    const groupB = words.filter(word => word.group === group && word.progress * 100 > 95)    
+    const groupB = words.filter(word => word.group === group && (word.progress * 100) > 95)    
     const trainingWords = []
     const used = []
     const used2 = []
-    const groupBln = Math.trunc(count/100*20)
+    const groupBln = Math.trunc((count/100)*30)
     
     // Выбираем слова для повторения
     if (groupB.length <= groupBln) {
