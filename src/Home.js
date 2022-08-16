@@ -46,6 +46,9 @@ const Home = ({ groups, words }) => {
           )
         })}
       </div>
+      <div className="row mt-3">
+      <div className="col-2"><b>Всего слов: {words.length}</b></div>
+      </div>
     </div>
   )
 }
