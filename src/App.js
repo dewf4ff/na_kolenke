@@ -4,6 +4,7 @@ import Words from "./Words";
 import Translation from "./Translation";
 import Home from "./Home";
 import storage from "./common/storage";
+import Exam from "./Exam";
 const COUNT = 15;
 
 function App() {
@@ -119,6 +120,9 @@ function App() {
                 <li className="nav-item">
                   <Link to="/translation" className="nav-link">Translation</Link>
                 </li>
+                <li className="nav-item">
+                  <Link to="/exam" className="nav-link">Exam</Link>
+                </li>
               </ul>
             </div>
           </nav>
@@ -127,6 +131,7 @@ function App() {
           <Route path="/" element={<Home groups={data.groups} words={data.words} />} />
           <Route path="/words" element={<Words onChange={onChange} words={data.words} groups={data.groups} trainingGroups={data.trainingGroups} />} />
           <Route path="/translation" element={<Translation onChange={onChange} words={data.words} groups={data.groups} trainingGroups={data.trainingGroups}/>} />
+          <Route path="/exam" element={<Exam onChange={onChange} words={data.words} groups={data.groups} />} />
         </Routes>
       </div>
     </Router>
