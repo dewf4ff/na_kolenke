@@ -21,6 +21,6 @@ html, body, #root, #root>div {
   justify-content: center;
 }
 
-.progress {
+.progress-custom {
   height: 0.3rem;
 }

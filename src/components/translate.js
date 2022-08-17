@@ -133,7 +133,7 @@ function TransitionTraining({ group, words, type, onFinish, count, training }) {
             <div className="word-card">
               <h5>{trainingWords[current][t]}</h5>
             </div>
-            <div className="progress">
+            <div className="progress progress-custom">
               <div className="progress-bar" style={{width: `${progressPercent}%`}} role="progressbar"  aria-valuenow={0} aria-valuemin="0" aria-valuemax={trainingWords.length.toString()}></div>
             </div>
           </div>  
