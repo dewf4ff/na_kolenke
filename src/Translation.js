@@ -39,7 +39,7 @@ const Translation = ({ words, groups, trainingGroups, onChange }) => {
       words={words} 
       training={trainingGroups}
       group={group}
-      count={15}
+      count={20}
       type={'word'}
       ready={initinal}
       onFinish={onFinish}       
