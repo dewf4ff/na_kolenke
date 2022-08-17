@@ -121,14 +121,20 @@ function TransitionTraining({ group, words, type, onFinish, count, training }) {
     }
     return 'btn btn-outline-secondary'
   }
+
+  const progressPercent = (current / trainingWords.length) * 100
   
   return (
     <div className="module row align-items-center mt-3" ref={containerRef}>
       <div className="col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-12 offset-sm-0 justify-content-center">
+        
         <div className="row">
           <div className="col mb-5">
             <div className="word-card">
               <h5>{trainingWords[current][t]}</h5>
+            </div>
+            <div className="progress">
+              <div className="progress-bar" style={{width: `${progressPercent}%`}} role="progressbar"  aria-valuenow={0} aria-valuemin="0" aria-valuemax={trainingWords.length.toString()}></div>
             </div>
           </div>  
         </div>
