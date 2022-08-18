@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ExamTraining from "./components/exam";
-import TransitionTraining from "./components/translate";
 
-const Exam = ({ words, groups, trainingGroups, onChange }) => {
+const Exam = ({ words, groups, onChange }) => {
   const [initinal, setInitinal] = useState(false);
   const [group, setGroup] = useState(false);
 
@@ -11,11 +10,6 @@ const Exam = ({ words, groups, trainingGroups, onChange }) => {
   const onStart = (group) => {
     setGroup(group)
     setInitinal(true)
-  }
-
-  const onFinish = (result) => {
-    onChange(result)
-    setInitinal(false)
   }
   
   if (!initinal) {
@@ -40,6 +34,7 @@ const Exam = ({ words, groups, trainingGroups, onChange }) => {
       words={words}
       group={group}
       type={'translation'}
+      setProgress={onChange}
     />
   )  
 }

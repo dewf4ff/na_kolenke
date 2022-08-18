@@ -4,7 +4,7 @@ const random = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function ExamTraining({ group, words, type, }) {
+function ExamTraining({ group, words, type, setProgress }) {
 
   const [trainingWords, setTrainingWords] = useState([]);
   const [current, setCurrent] = useState(0);
@@ -22,8 +22,6 @@ function ExamTraining({ group, words, type, }) {
     setReady(true)
     return () => { setCurrent(0) }
   }, [group])
-
-  
 
   const getAnswers = (array, el, param) => {
     const result = [el[param]]
@@ -69,18 +67,35 @@ function ExamTraining({ group, words, type, }) {
   const t = type === 'translation' ? 'word' : 'translation'
   if (!ready) return null;
 
+  const unknownWords = result.filter(it => !it.isRight)
+
   if (result.length === trainingWords.length) {
     return (
-      <>
-        <div className="module row mt-3">
-          <div className="col-2">
-            Всего слов: {result.length}
+      <div className="module row mt-3">
+        <div className="col-12">
+          <div className="row">
+            <div className="col-2">
+              Всего слов: {result.length}
+            </div>
+            <div className="col-2">
+              Не изучено слов: {unknownWords.length}
+            </div>
+            <div className="col-2">
+              <button className="btn btn-primary" onClick={() => setProgress(unknownWords, group)}>Сформировать тренировку</button>
+            </div>
           </div>
-          <div className="col-2">
-            Не изучено слов: {result.filter(it => !it.isRight).length}
+          <div className="row">
+            <div className="col-12">
+              Неизученные слова
+            </div>
+            {unknownWords.map((word, i) => (
+              <div key={`w-${i}`} className="col-12">
+                <b>{word.word}</b> - {words.find(it => it.word === word.word).translation}
+              </div>
+            ))}
           </div>
         </div>
-      </>
+      </div>
     )
   }
   

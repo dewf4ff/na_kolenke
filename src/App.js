@@ -82,6 +82,32 @@ function App() {
     })
   })
 
+  const updateAfterExam = (result, group) => {
+    const raw = result.map(it => it.word)
+    const rawProgress = storage.getProgress()
+    const wordGroup = data.words.filter(it => it.group === group)
+    const successWords = wordGroup.filter(it => !raw.includes(it.word))
+    console.log(group, raw, successWords)
+    successWords.forEach(word => {
+      rawProgress[word.word] = {
+        progress: 19,
+        shows: 20
+      }
+    })
+    raw.forEach(word => {
+      rawProgress[word] = {
+        progress: 0,
+        shows: 10
+      }
+    })
+    storage.setProgress(rawProgress)
+    prepareWords().then(res => {
+      storage.setGroup(res.trainingGroups)
+      setData(res)
+      window.location.href = '/'
+    })
+  }
+
   const onChange = (result) => {
     const rawProgress = storage.getProgress()
     Object.keys(result).forEach(word => {
@@ -131,7 +157,7 @@ function App() {
           <Route path="/" element={<Home groups={data.groups} words={data.words} />} />
           <Route path="/words" element={<Words onChange={onChange} words={data.words} groups={data.groups} trainingGroups={data.trainingGroups} />} />
           <Route path="/translation" element={<Translation onChange={onChange} words={data.words} groups={data.groups} trainingGroups={data.trainingGroups}/>} />
-          <Route path="/exam" element={<Exam onChange={onChange} words={data.words} groups={data.groups} />} />
+          <Route path="/exam" element={<Exam onChange={updateAfterExam} words={data.words} groups={data.groups} />} />
         </Routes>
       </div>
     </Router>
