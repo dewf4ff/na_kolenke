@@ -97,7 +97,7 @@ function App() {
     raw.forEach(word => {
       rawProgress[word] = {
         progress: 0,
-        shows: 10
+        shows: 0
       }
     })
     storage.setProgress(rawProgress)
