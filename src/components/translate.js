@@ -20,7 +20,13 @@ function TransitionTraining({ group, words, type, onFinish, count, training }) {
     if (groupB.length <= groupBln) {
       groupB.forEach(it => trainingWords.push({...it, answers: getAnswers(training[group], it, type)}))
     } else {
-      for (let i=0; i<groupBln; i++) {
+      // Сортируем по показам и берем 30% наименьших показов
+      groupB.sort((a, b) => a.shows - b.shows)
+      const minLn = Math.trunc(groupBln/2)
+      // Половину наполняем из редко показываемых
+      groupB.slice(0, minLn).forEach(it => trainingWords.push({...it, answers: getAnswers(training[group], it, type)}))
+      // Оставшиесмя рандомно
+      for (let i=0; i<(groupBln-minLn); i++) {
         const words = groupB.filter(it => !used.includes(it.word))
         if (!words.length) break;
         const r = random(0, words.length - 1)
