@@ -91,8 +91,8 @@ function App() {
         return
       }
     })
-    const storageGroups = {...storage.getGroups()}
-    const rawProgress = {...storage.getProgress()}
+    const storageGroups = storage.getGroups()
+    const rawProgress = storage.getProgress()
     
     // Group A
     groups.a.forEach(word => {
@@ -170,55 +170,20 @@ function App() {
     
     console.log('res', result, groups, storageGroups.groupA[group], storageGroups.groupB[group], storageGroups.groupC[group])
   }
-  const updateAfterExam = (result, group) => {}
-  /*
-const updateAfterExam = (result, group) => {
-    const raw = result.map(it => it.word)
-    const rawProgress = storage.getProgress()
-    const wordGroup = data.words.filter(it => it.group === group)
-    const successWords = wordGroup.filter(it => !raw.includes(it.word))
-    console.log(group, raw, successWords)
-    successWords.forEach(word => {
-      rawProgress[word.word] = {
-        progress: 19,
-        shows: 20
-      }
+  const updateAfterExam = (result, group) => {
+    const storageGroups = storage.getGroups()
+    storageGroups.groupA[group] = result.map(it => it.word)
+    const wordGroup = data.words.filter(it => it.group === group).map(it => it.word)
+    storageGroups.groupC[group] = wordGroup.filter(it => !storageGroups.groupA[group].includes(it))
+    storageGroups.groupB[group] = []
+    storage.setGroups(storageGroups)
+    setData({
+      ...data,
+      data: storageGroups
     })
-    raw.forEach(word => {
-      rawProgress[word] = {
-        progress: 0,
-        shows: 0
-      }
-    })
-    storage.setProgress(rawProgress)
-    prepareWords().then(res => {
-      storage.setGroup(res.trainingGroups)
-      setData(res)
-      window.location.href = '/'
-    })
+    window.location.href = '/'
   }
-
-  const onChange = (result) => {
-    const rawProgress = storage.getProgress()
-    Object.keys(result).forEach(word => {
-      if (!rawProgress[word]) {
-        rawProgress[word] = {
-          progress: 0,
-          shows: 0
-        }
-      }
-      rawProgress[word].progress += result[word].progress
-      rawProgress[word].shows += result[word].shows
-    })
-    storage.setProgress(rawProgress)
-    prepareWords().then(res => {
-      storage.setGroup(res.trainingGroups)
-      setData(res)
-    })
-  }
-  */
-  
-
+ 
   if (!data) return null;
   return (
     <Router>
