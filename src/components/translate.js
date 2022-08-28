@@ -4,49 +4,18 @@ const random = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function TransitionTraining({ group, words, type, onFinish, count, training }) {
+function TransitionTraining({ group, words, type, onFinish, training }) {
   const containerRef = useRef(null)
   const [ready, setReady] = useState(false)
   const [result, setResult] = useState([])
   const [currAnswer, setAnswer] = useState(null)
   useEffect(() => {
-    const groupB = words.filter(word => word.group === group && (word.progress * 100) > 95)    
     const trainingWords = []
-    const used = []
-    const used2 = []
-    const groupBln = Math.trunc((count/100)*30)
-    
-    // Выбираем слова для повторения
-    if (groupB.length <= groupBln) {
-      groupB.forEach(it => trainingWords.push({...it, answers: getAnswers(training[group], it, type)}))
-    } else {
-      // Сортируем по показам и берем 30% наименьших показов
-      groupB.sort((a, b) => a.shows - b.shows)
-      const minLn = Math.trunc(groupBln/2)
-      // Половину наполняем из редко показываемых
-      groupB.slice(0, minLn).forEach(it => trainingWords.push({...it, answers: getAnswers(training[group], it, type)}))
-      // Оставшиесмя рандомно
-      for (let i=0; i<(groupBln-minLn); i++) {
-        const words = groupB.filter(it => !used.includes(it.word))
-        if (!words.length) break;
-        const r = random(0, words.length - 1)
-        used.push(words[r].word)
-        trainingWords.push({...words[r], answers: getAnswers(training[group], words[r], type)})
-      }
-    }
-
-    // Выбираем слова для изучения
-    const delta = count-trainingWords.length
-    for (let i=0; i<delta; i++) {
-      const words = training[group].filter(it => !used2.includes(it.word))
-      if (!words.length) break;
-      const r = random(0, words.length - 1)
-      used2.push(words[r].word)
-      trainingWords.push({...words[r], answers: getAnswers(training[group], words[r], type)})
-    }
-
-    console.log('OK', trainingWords)
-
+    const wordsGroup = words.filter(word => word.group === group)
+    training.forEach(word => {
+      const realWord = words.find(it => it.word === word)
+      trainingWords.push({...realWord, answers: getAnswers(wordsGroup, realWord, type)})
+    })
     setTrainingWords(trainingWords)
     setReady(true)
     return () => { setCurrent(0) }

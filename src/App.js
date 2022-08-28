@@ -8,81 +8,171 @@ import Exam from "./Exam";
 const COUNT = 15;
 
 function App() {
+  const [words, setWords] = useState(null);
   const [data, setData] = useState(null);
-  const prepareWords = async () => {
-    const rawWords = await storage.getWords()
-    const rawProgress = storage.getProgress()
-
-    let trainingGroups = storage.getGroup()
-    if (!trainingGroups) {
-      trainingGroups = {}
-    }
-
-    const { words, groups } = rawWords.reduce((result, item) => {
-      if (!trainingGroups[item.group]) {
-        trainingGroups[item.group] = []
-      }
-      if (!result.groups.includes(item.group)) {
-        result.groups.push(item.group)
-      }
-      const progress = rawProgress[item.word]
-      const success = progress ? progress.progress : 0
-      const shows = progress ? progress.shows : 0
-      result.words.push({...item, shows, success, progress: progress && !isNaN(success/shows) ? success/shows : 0 })
-      return result
-    }, { words: [], groups: [] })
-    
-    // Исключаем из группы уже изученные слова или слова которых уже нет в словаре
-    groups.forEach(group => {
-      if (trainingGroups[group].length > COUNT * 2) {
-        trainingGroups[group] = []
-      }
-      trainingGroups[group] = trainingGroups[group].filter(word => {
-        if (!words.find(it => it.word === word.word)) return false;
-        if (!rawProgress[word.word]) return true;
-        const progress = rawProgress[word.word].progress / rawProgress[word.word].shows
-        if (isNaN(progress) || progress < 0.95 || rawProgress[word.word].shows < 10) return true;
-        console.log('Изучено: ', word.word, progress)
-        return false;
-      })
-    })
-    // Наполняем группы если они пустые, а также обновляем переводы
-    groups.forEach(group => {
-      trainingGroups[group].forEach((item, ind) => {
-        const word = words.find(it => it.word === item.word);
-        if (word) {
-          trainingGroups[group][ind].translation = word.translation
+  useEffect(() => {
+    if (words) return;
+    storage.getWords().then(res => setWords(res))
+  }, [words])
+  
+  useEffect(() => {
+    if (!words) return;
+    console.log('prepare', words)
+    const prepareWords = async () => {
+      const storageGroups = storage.getGroups()
+      const groups = words.reduce((result, item) => {
+        if (!result.includes(item.group)) {
+          result.push(item.group)
+        }
+        return result
+      }, [])
+  
+      // Создаем отсутствующие группы и удаляем не нужные
+      groups.forEach(group => {
+        if (!storageGroups.groupA[group]) {
+          storageGroups.groupA[group] = []
+        }
+        if (!storageGroups.groupB[group]) {
+          storageGroups.groupB[group] = []
+        }
+        if (!storageGroups.groupC[group]) {
+          storageGroups.groupC[group] = []
         }
       })
-      const training = words.filter(word => word.group === group).sort((a,b) => a.progress - b.progress)
-      if (!trainingGroups[group].length) {
-        training.slice(0, COUNT * 2).forEach(word => trainingGroups[group].push({ group: word.group, word: word.word, translation: word.translation }));
-      } else if (trainingGroups[group].length < COUNT * 2) {
-        const additional = training.filter(it => {
-          const exists = trainingGroups[group].find(item => item.word === it.word)
-          const shows = rawProgress[it.word] ? rawProgress[it.word].shows : 0
-          const progress = rawProgress[it.word] ? rawProgress[it.word].progress : 0
-          const progressValue = isNaN(progress / shows) ? progress / shows : 0
-          if (exists || progressValue < 0.95) return false
-          return true
-        });
-        if (!additional.length) return;
-        const delta = (COUNT * 2) - trainingGroups[group].length
-        additional.slice(0, delta).forEach(word => trainingGroups[group].push({ group: word.group, word: word.word, translation: word.translation }));
-        console.log(`Добавили новые слова (${delta}) к изучению`, group, trainingGroups[group].length)
-      }
-    })
-    return { words, groups, trainingGroups }
-  }
-  useEffect(() => {
-    if (data) return;
+      Object.keys(storageGroups).forEach(namespace => {
+        Object.keys(storageGroups[namespace]).filter(group => !groups.includes(group)).forEach(group => {
+          delete storageGroups[namespace][group]
+        })
+      });
+  
+      // Удаляем в группах слова, которых нет
+      Object.keys(storageGroups).forEach(namespace => {
+        Object.keys(storageGroups[namespace]).forEach(group => {
+          const g = []
+          storageGroups[namespace][group].forEach(word => {
+            const exists = words.find(it => it.word === word)
+            if (exists) {
+              g.push(word)
+            }
+          })
+          storageGroups[namespace][group] = g
+        })
+      })
+      // Добавляем новые слова
+      words.forEach(word => {
+        const existsA = storageGroups.groupA[word.group].find(it => it === word.word)
+        const existsB = storageGroups.groupB[word.group].find(it => it === word.word)
+        const existsC = storageGroups.groupC[word.group].find(it => it === word.word)
+        if (!existsA && !existsB && !existsC) {
+          storageGroups.groupA[word.group].push(word.word)
+        }
+      })
+      return { groups, data: storageGroups, words }
+    }
     prepareWords().then(res => {
-      storage.setGroup(res.trainingGroups)
+      storage.setGroups(res.data)
       setData(res)
     })
-  })
-
-  const updateAfterExam = (result, group) => {
+  }, [words])
+  
+  const onChange = (result, group) => {
+    const groups = { a: [], b: [], c: [] }
+    Object.keys(result).forEach(word => {
+      if (data.data.groupA[group].includes(word)) {
+        groups.a.push(word)
+        return
+      }
+      if (data.data.groupB[group].includes(word)) {
+        groups.b.push(word)
+        return
+      } 
+      if (data.data.groupC[group].includes(word)) {
+        groups.c.push(word)
+        return
+      }
+    })
+    const storageGroups = {...storage.getGroups()}
+    const rawProgress = {...storage.getProgress()}
+    
+    // Group A
+    groups.a.forEach(word => {
+      if (!rawProgress[word]) {
+        rawProgress[word] = {
+          shows: 0,
+          progress: 0
+        }
+      }
+      const progress = result[word].progress / result[word].shows
+      if (progress === 1) {
+        rawProgress[word].shows += result[word].shows
+      } else {
+        rawProgress[word].shows = 0
+      }
+      if (rawProgress[word].shows >= 5) {
+        const ind = storageGroups.groupA[group].indexOf(word)
+        if (ind !== -1) {
+          storageGroups.groupA[group].splice(ind, 1)
+          storageGroups.groupB[group].push(word)
+          rawProgress[word].shows = 0
+          rawProgress[word].progress = 0
+        }
+      }
+    })
+    // Group B
+    groups.b.forEach(word => {
+      if (!rawProgress[word]) {
+        rawProgress[word] = {
+          shows: 0,
+          progress: 0
+        }
+      }
+      rawProgress[word].shows += result[word].shows
+      rawProgress[word].progress += result[word].progress
+      const progress = rawProgress[word].progress / rawProgress[word].shows
+      const ind = storageGroups.groupB[group].indexOf(word)
+      if (progress <= 0.5 && rawProgress[word].shows >= 10) {
+        if (ind !== -1) {
+          storageGroups.groupB[group].splice(ind, 1)
+          storageGroups.groupA[group].splice(0, 0, word)
+          rawProgress[word].shows = 0
+          rawProgress[word].progress = 0
+        }
+      } else if (progress >= 0.9 && rawProgress[word].shows >= 10) {
+        storageGroups.groupB[group].splice(ind, 1)
+        storageGroups.groupC[group].push(word)
+        rawProgress[word].shows = 0
+        rawProgress[word].progress = 0
+      }
+    })
+    // Group C
+    groups.c.forEach(word => {
+      const progress = result[word].progress / result[word].shows
+      const ind = storageGroups.groupC[group].indexOf(word)
+      if (progress === 1) {
+        if (ind !== -1) {
+          storageGroups.groupC[group].splice(ind, 1)
+          storageGroups.groupC[group].push(word)
+        }
+      } else {
+        rawProgress[word] = { shows: 0, progress: 0 }
+        if (ind !== -1) {
+          storageGroups.groupC[group].splice(ind, 1)
+          storageGroups.groupB[group].push(word)
+        }
+      }
+    })
+    storage.setGroups(storageGroups)
+    storage.setProgress(rawProgress)
+    setData({
+      ...data,
+      data: storageGroups
+    })
+    
+    console.log('res', result, groups, storageGroups.groupA[group], storageGroups.groupB[group], storageGroups.groupC[group])
+  }
+  const updateAfterExam = (result, group) => {}
+  /*
+const updateAfterExam = (result, group) => {
     const raw = result.map(it => it.word)
     const rawProgress = storage.getProgress()
     const wordGroup = data.words.filter(it => it.group === group)
@@ -126,11 +216,12 @@ function App() {
       setData(res)
     })
   }
+  */
+  
 
   if (!data) return null;
   return (
     <Router>
-      
       <div className="container">
         <div className="row">
           <nav className="navbar navbar-expand-lg navbar-expand-md navbar-light bg-light">
@@ -155,9 +246,9 @@ function App() {
         </div>
         <Routes>
           <Route path="/" element={<Home groups={data.groups} words={data.words} />} />
-          <Route path="/words" element={<Words onChange={onChange} words={data.words} groups={data.groups} trainingGroups={data.trainingGroups} />} />
-          <Route path="/translation" element={<Translation onChange={onChange} words={data.words} groups={data.groups} trainingGroups={data.trainingGroups}/>} />
-          <Route path="/exam" element={<Exam onChange={updateAfterExam} words={data.words} groups={data.groups} />} />
+          <Route path="/words" element={<Words onChange={onChange} words={words} groups={data.groups} trainingGroups={data.data} />} />
+          <Route path="/translation" element={<Translation onChange={onChange} words={words} groups={data.groups} trainingGroups={data.data}/>} />
+          <Route path="/exam" element={<Exam onChange={updateAfterExam} words={words} groups={data.groups} />} />
         </Routes>
       </div>
     </Router>

@@ -34,6 +34,19 @@ class Storage {
   setGroup(group) {
     localStorage.setItem('group', JSON.stringify(group))
   }
+  getGroups() {
+    const rawData = localStorage.getItem('groups')
+    if (!rawData) return {
+      groupA: {},
+      groupB: {},
+      groupC: {}
+    }
+    return JSON.parse(rawData)
+  }
+  setGroups(data) {
+    localStorage.setItem('groups', JSON.stringify(data))
+  }
+
 }
 const storage = new Storage()
 export default storage
