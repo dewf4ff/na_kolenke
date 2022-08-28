@@ -4,24 +4,10 @@ const Home = ({ groups, words }) => {
   const [progress, setProgress] = useState(null);
   useEffect(() => {
     const a = storage.getProgress()
+    const storageGroups = storage.getGroups()
     const globalProgress = {}
     groups.forEach(group => {
-      let maxShow = 0
-      Object.keys(a).forEach(word => {
-        const originalWord = words.find(it => it.word === word && it.group === group)
-        if (a[word].shows > maxShow && originalWord) {
-          maxShow = a[word].shows
-        }
-      })
-      maxShow = Math.trunc(maxShow / 4) > 2 ? Math.trunc(maxShow / 4) : 2
-      globalProgress[group] = 0
-      const groupWords = words.filter(it => it.group === group)
-      groupWords.forEach(word => {
-        const progress = a[word.word] ? a[word.word].progress : 0
-        const shows = a[word.word] ? a[word.word].shows : 0
-        const r = (a[word.word] && !isNaN(progress/shows) ? progress/shows : 0) * 100
-        globalProgress[group] += shows >= 10 && r >= 95 ? 1: 0
-      })
+      globalProgress[group] = storageGroups.groupC[group].length + storageGroups.groupB[group].length || 0
     })
     setProgress(globalProgress)
   }, [])
