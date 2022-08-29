@@ -108,7 +108,7 @@ function App() {
       } else {
         rawProgress[word].shows = 0
       }
-      if (rawProgress[word].shows >= 5) {
+      if (rawProgress[word].shows >= 10) {
         const ind = storageGroups.groupA[group].indexOf(word)
         if (ind !== -1) {
           storageGroups.groupA[group].splice(ind, 1)
