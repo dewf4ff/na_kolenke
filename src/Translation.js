@@ -62,6 +62,7 @@ const Translation = ({ words, groups, trainingGroups, onChange }) => {
   return (
     <TransitionTraining 
       words={words} 
+      trainingGroups={trainingGroups}
       training={training}
       group={group}
       count={20}

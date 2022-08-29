@@ -98,7 +98,7 @@ function ExamTraining({ group, words, type, setProgress }) {
       </div>
     )
   }
-  
+  const progressPercent = (current / trainingWords.length) * 100
   return (
     <div className="module row align-items-center mt-3">
       <div className="col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-12 offset-sm-0 justify-content-center">
@@ -106,6 +106,9 @@ function ExamTraining({ group, words, type, setProgress }) {
           <div className="col mb-5">
             <div className="word-card">
               <h5>{trainingWords[current][t]}</h5>
+            </div>
+            <div className="progress progress-custom">
+              <div className="progress-bar" style={{width: `${progressPercent}%`}} role="progressbar"  aria-valuenow={0} aria-valuemin="0" aria-valuemax={trainingWords.length.toString()}></div>
             </div>
           </div>  
         </div>

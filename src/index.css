@@ -19,6 +19,28 @@ html, body, #root, #root>div {
   background: #eee;
   align-items: center;
   justify-content: center;
+  position: relative;
+}
+
+.bullet {
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+}
+
+.bullet-red {
+  background: red;
+}
+
+.bullet-yellow {
+  background: yellow;
+}
+
+.bullet-green {
+  background: green;
 }
 
 .progress-custom {

@@ -4,7 +4,7 @@ const random = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function TransitionTraining({ group, words, type, onFinish, training }) {
+function TransitionTraining({ group, words, type, onFinish, training, trainingGroups }) {
   const containerRef = useRef(null)
   const [ready, setReady] = useState(false)
   const [result, setResult] = useState([])
@@ -98,7 +98,18 @@ function TransitionTraining({ group, words, type, onFinish, training }) {
   }
 
   const progressPercent = (current / trainingWords.length) * 100
-  
+  const getGroup = (word) => {
+    console.log('trainingGroups', trainingGroups)
+    if (trainingGroups.groupA[group].includes(word)) {
+      return 'bullet bullet-red'
+    }
+    if (trainingGroups.groupB[group].includes(word)) {
+      return 'bullet bullet-yellow'
+    }
+    if (trainingGroups.groupC[group].includes(word)) {
+      return 'bullet bullet-green'
+    }
+  }
   return (
     <div className="module row align-items-center mt-3" ref={containerRef}>
       <div className="col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-12 offset-sm-0 justify-content-center">
@@ -106,6 +117,7 @@ function TransitionTraining({ group, words, type, onFinish, training }) {
         <div className="row">
           <div className="col mb-5">
             <div className="word-card">
+              <div className={getGroup(trainingWords[current].word)}/>
               <h5>{trainingWords[current][t]}</h5>
             </div>
             <div className="progress progress-custom">
