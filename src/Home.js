@@ -7,7 +7,7 @@ const Home = ({ groups, words }) => {
     const storageGroups = storage.getGroups()
     const globalProgress = {}
     groups.forEach(group => {
-      globalProgress[group] = storageGroups.groupC[group].length + storageGroups.groupB[group].length || 0
+      globalProgress[group] = storageGroups.groupC[group].length || 0
     })
     setProgress(globalProgress)
   }, [])
