@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import TransitionTraining from "./components/translate";
-
+const COUNT = 25
 const random = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -16,7 +16,7 @@ const Words = ({ words, groups, trainingGroups, onChange }) => {
     const training = []
     trainingGroups.groupA[group].slice(0, 10).forEach(word => training.push(word))
     if (trainingGroups.groupB[group].length) {
-      const rememberGroup = Math.trunc((20 - training.length) * 0.2)
+      const rememberGroup = Math.trunc((COUNT - training.length) * 0.2)
       if (trainingGroups.groupB[group].length <= rememberGroup) {
         trainingGroups.groupB[group].forEach(word => training.push(word))
       } else {
@@ -31,7 +31,7 @@ const Words = ({ words, groups, trainingGroups, onChange }) => {
         }
       }
     }
-    const delta = 20 - training.length
+    const delta = COUNT - training.length
     trainingGroups.groupC[group].slice(0, delta).forEach(word => training.push(word))
     console.log('training', training)
     setTraining(training)
