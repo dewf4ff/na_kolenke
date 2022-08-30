@@ -14,7 +14,7 @@ const Translation = ({ words, groups, trainingGroups, onChange }) => {
   const onStart = (group) => {
     setGroup(group)
     const training = []
-    trainingGroups.groupA[group].slice(0, 7).forEach(word => training.push(word))
+    trainingGroups.groupA[group].slice(0, 10).forEach(word => training.push(word))
     if (trainingGroups.groupB[group].length) {
       const rememberGroup = Math.trunc((20 - training.length) * 0.2)
       if (trainingGroups.groupB[group].length <= rememberGroup) {
@@ -65,7 +65,7 @@ const Translation = ({ words, groups, trainingGroups, onChange }) => {
       trainingGroups={trainingGroups}
       training={training}
       group={group}
-      count={20}
+      count={25}
       type={'word'}
       ready={!!training}
       onFinish={onFinish}       

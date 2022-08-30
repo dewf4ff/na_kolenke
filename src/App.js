@@ -126,22 +126,21 @@ function App() {
           progress: 0
         }
       }
-      rawProgress[word].shows += result[word].shows
-      rawProgress[word].progress += result[word].progress
-      const progress = rawProgress[word].progress / rawProgress[word].shows
-      const ind = storageGroups.groupB[group].indexOf(word)
-      if (progress <= 0.5 && rawProgress[word].shows >= 10) {
+
+      const progress = result[word].progress / result[word].shows
+      if (progress === 1) {
+        rawProgress[word].shows += result[word].shows
+      } else {
+        rawProgress[word].shows = 0
+      }
+      if (rawProgress[word].shows >= 3) {
+        const ind = storageGroups.groupB[group].indexOf(word)
         if (ind !== -1) {
           storageGroups.groupB[group].splice(ind, 1)
-          storageGroups.groupA[group].splice(0, 0, word)
+          storageGroups.groupC[group].push(word)
           rawProgress[word].shows = 0
           rawProgress[word].progress = 0
         }
-      } else if (progress >= 0.9 && rawProgress[word].shows >= 10) {
-        storageGroups.groupB[group].splice(ind, 1)
-        storageGroups.groupC[group].push(word)
-        rawProgress[word].shows = 0
-        rawProgress[word].progress = 0
       }
     })
     // Group C
