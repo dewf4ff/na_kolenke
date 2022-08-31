@@ -43,14 +43,13 @@ const Words = ({ words, groups, trainingGroups, onChange, step }) => {
         trainingGroups.groupC[group].slice(0, delta).forEach(word => training.push(word))
       }
       console.log('training', training)
-      setTraining(training)
     } else {
       trainingGroups.groupC[group].slice(0, COUNT).forEach(word => training.push(word))
       if (training.length < COUNT) {
         trainingGroups.groupA[group].slice(0, COUNT - training.length).forEach(word => training.push(word))
       }
     }
-    
+    setTraining(training)
   }
 
   const onFinish = (result) => {
