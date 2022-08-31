@@ -56,6 +56,7 @@ function TransitionTraining({ group, words, type, onFinish, training, trainingGr
             progress: 0
           }
         }
+        
         progress[it.word].shows += 1
         progress[it.word].progress += it.isRight ? 1 : 0
       })

@@ -15,12 +15,16 @@ const Translation = ({ words, groups, trainingGroups, onChange, step }) => {
     setGroup(group)
     const training = []
     if (step) {
-      const data = trainingGroups.groupA[group].slice(0, 10)
-      trainingGroups.groupB[group].slice(0, 5).forEach(it => data.push(it))
-      for (let i = 0; i<(data.length * 2) && i<COUNT; i++) {
-        const r = random(0, data.length - 1)
-        training.push(data[r])
+      const used = []
+      const data = trainingGroups.groupA[group].slice(0, COUNT)
+      while (training.length < COUNT*0.7 && data.length > 0) {
+        const r = random(0, data.length)
+        if (used.includes(data[r])) continue;
+        const el = data.splice(r, 1)[0]
+        used.push(el)
+        training.push(el)
       }
+      trainingGroups.groupB[group].slice(0, COUNT-training.length).forEach(it => data.push(it))
       const delta = COUNT - training.length
       if (delta > 0) {
         trainingGroups.groupC[group].slice(0, delta).forEach(word => training.push(word))
