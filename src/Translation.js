@@ -18,8 +18,8 @@ const Translation = ({ words, groups, trainingGroups, onChange, step }) => {
       const data = trainingGroups.groupA[group].slice(0, 10)
       trainingGroups.groupB[group].slice(0, 5).forEach(it => data.push(it))
       for (let i = 0; i<(data.length * 2) && i<COUNT; i++) {
-        const random = random(0, data.length - 1)
-        training.push(data[random])
+        const r = random(0, data.length - 1)
+        training.push(data[r])
       }
       const delta = COUNT - training.length
       if (delta > 0) {
