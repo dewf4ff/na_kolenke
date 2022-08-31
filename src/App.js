@@ -20,6 +20,7 @@ function App() {
     console.log('prepare', words)
     const prepareWords = async () => {
       const storageGroups = storage.getGroups()
+      const step = storage.getStep()
       const groups = words.reduce((result, item) => {
         if (!result.includes(item.group)) {
           result.push(item.group)
@@ -67,7 +68,7 @@ function App() {
           storageGroups.groupA[word.group].push(word.word)
         }
       })
-      return { groups, data: storageGroups, words }
+      return { groups, data: storageGroups, words, step }
     }
     prepareWords().then(res => {
       storage.setGroups(res.data)
@@ -162,12 +163,12 @@ function App() {
     })
     storage.setGroups(storageGroups)
     storage.setProgress(rawProgress)
+    storage.setStep(!data.step)
     setData({
       ...data,
+      step: !data.step,
       data: storageGroups
     })
-    
-    console.log('res', result, groups, storageGroups.groupA[group], storageGroups.groupB[group], storageGroups.groupC[group])
   }
   const updateAfterExam = (result, group) => {
     const storageGroups = storage.getGroups()
@@ -210,8 +211,8 @@ function App() {
         </div>
         <Routes>
           <Route path="/" element={<Home groups={data.groups} words={data.words} />} />
-          <Route path="/words" element={<Words onChange={onChange} words={words} groups={data.groups} trainingGroups={data.data} />} />
-          <Route path="/translation" element={<Translation onChange={onChange} words={words} groups={data.groups} trainingGroups={data.data}/>} />
+          <Route path="/words" element={<Words onChange={onChange} step={data.step} words={words} groups={data.groups} trainingGroups={data.data} />} />
+          <Route path="/translation" element={<Translation onChange={onChange} step={data.step} words={words} groups={data.groups} trainingGroups={data.data}/>} />
           <Route path="/exam" element={<Exam onChange={updateAfterExam} words={words} groups={data.groups} />} />
         </Routes>
       </div>

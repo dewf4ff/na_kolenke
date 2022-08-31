@@ -34,6 +34,14 @@ class Storage {
   setGroup(group) {
     localStorage.setItem('group', JSON.stringify(group))
   }
+  getStep() {
+    const rawData = localStorage.getItem('step')
+    if (!rawData) return false
+    return JSON.parse(rawData)
+  }
+  setStep(step) {
+    localStorage.setItem('step', JSON.stringify(step))
+  }
   getGroups() {
     const rawData = localStorage.getItem('groups')
     if (!rawData) return {
