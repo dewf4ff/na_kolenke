@@ -72,6 +72,7 @@ function App() {
     }
     prepareWords().then(res => {
       storage.setGroups(res.data)
+      console.log('res.data', res.data)
       setData(res)
     })
   }, [words])
