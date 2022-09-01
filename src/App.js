@@ -103,19 +103,18 @@ function App() {
           progress: 0
         }
       }
-      const progress = result[word].progress / result[word].shows
-      if (progress === 1) {
-        rawProgress[word].shows += result[word].shows
-      } else {
-        rawProgress[word].shows = 0
-      }
+      rawProgress[word].shows += result[word].shows
+      rawProgress[word].progress += result[word].progress
+      const progress = rawProgress[word].progress / rawProgress[word].shows
       if (rawProgress[word].shows >= 10) {
         const ind = storageGroups.groupA[group].indexOf(word)
-        if (ind !== -1) {
-          storageGroups.groupA[group].splice(ind, 1)
-          storageGroups.groupB[group].push(word)
-          rawProgress[word].shows = 0
-          rawProgress[word].progress = 0
+        if (progress >= 0.9) {
+          if (ind !== -1) {
+            storageGroups.groupA[group].splice(ind, 1)
+            storageGroups.groupB[group].push(word)
+            rawProgress[word].shows = 0
+            rawProgress[word].progress = 0
+          }
         }
       }
     })
@@ -127,20 +126,25 @@ function App() {
           progress: 0
         }
       }
-
-      const progress = result[word].progress / result[word].shows
-      if (progress === 1) {
-        rawProgress[word].shows += result[word].shows
-      } else {
-        rawProgress[word].shows = 0
-      }
+      rawProgress[word].shows += result[word].shows
+      rawProgress[word].progress += result[word].progress
+      const progress = rawProgress[word].progress / rawProgress[word].shows
       if (rawProgress[word].shows >= 5) {
         const ind = storageGroups.groupB[group].indexOf(word)
-        if (ind !== -1) {
-          storageGroups.groupB[group].splice(ind, 1)
-          storageGroups.groupC[group].push(word)
-          rawProgress[word].shows = 0
-          rawProgress[word].progress = 0
+        if (progress >= 0.9) {
+          if (ind !== -1) {
+            storageGroups.groupB[group].splice(ind, 1)
+            storageGroups.groupC[group].push(word)
+            rawProgress[word].shows = 0
+            rawProgress[word].progress = 0
+          }
+        } else {
+          if (ind !== -1) {
+            storageGroups.groupB[group].splice(ind, 1)
+            storageGroups.groupA.splice(0, 0, word)
+            rawProgress[word].shows = 0
+            rawProgress[word].progress = 0
+          }
         }
       }
     })
