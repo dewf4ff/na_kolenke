@@ -16,7 +16,7 @@ const Translation = ({ words, groups, trainingGroups, onChange, step }) => {
     const training = []
     if (step) {
       const used = []
-      let emptyA = !!trainingGroups.groupA[group].length
+      let emptyA = !trainingGroups.groupA[group].length
       const data = !emptyA ? trainingGroups.groupA[group].slice(0, COUNT) : trainingGroups.groupB[group].slice(0, COUNT)
       while (training.length < COUNT*0.7 && data.length > 0) {
         const r = random(0, data.length-1)
