@@ -16,7 +16,8 @@ const Translation = ({ words, groups, trainingGroups, onChange, step }) => {
     const training = []
     if (step) {
       const used = []
-      const data = trainingGroups.groupA[group].slice(0, COUNT)
+      let emptyA = !!trainingGroups.groupA[group].length
+      const data = !emptyA ? trainingGroups.groupA[group].slice(0, COUNT) : trainingGroups.groupB[group].slice(0, COUNT)
       while (training.length < COUNT*0.7 && data.length > 0) {
         const r = random(0, data.length-1)
         if (used.includes(data[r])) continue;
@@ -24,7 +25,9 @@ const Translation = ({ words, groups, trainingGroups, onChange, step }) => {
         used.push(el)
         training.push(el)
       }
-      trainingGroups.groupB[group].slice(0, COUNT-training.length).forEach(it => data.push(it))
+      if (!emptyA) {
+        trainingGroups.groupB[group].slice(0, COUNT-training.length).forEach(it => data.push(it))
+      }
       const delta = COUNT - training.length
       if (delta > 0) {
         trainingGroups.groupC[group].slice(0, delta).forEach(word => training.push(word))
