@@ -107,7 +107,7 @@ function App() {
       rawProgress[word].shows += result[word].shows
       rawProgress[word].progress += result[word].progress
       const progress = rawProgress[word].progress / rawProgress[word].shows
-      if (rawProgress[word].shows >= 10) {
+      if (rawProgress[word].shows >= 6) {
         const ind = storageGroups.groupA[group].indexOf(word)
         if (progress >= 0.9) {
           if (ind !== -1) {
