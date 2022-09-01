@@ -109,7 +109,7 @@ function App() {
       const progress = rawProgress[word].progress / rawProgress[word].shows
       if (rawProgress[word].shows >= 6) {
         const ind = storageGroups.groupA[group].indexOf(word)
-        console.log('result', word, progress)
+        console.log('result A', word, progress)
         if (progress >= 0.9) {
           if (ind !== -1) {
             storageGroups.groupA[group].splice(ind, 1)
