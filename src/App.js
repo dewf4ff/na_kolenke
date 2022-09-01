@@ -142,7 +142,7 @@ function App() {
         } else {
           if (ind !== -1) {
             storageGroups.groupB[group].splice(ind, 1)
-            storageGroups.groupA.splice(0, 0, word)
+            storageGroups.groupA[group].splice(0, 0, word)
             rawProgress[word].shows = 0
             rawProgress[word].progress = 0
           }
