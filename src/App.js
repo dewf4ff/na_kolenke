@@ -130,8 +130,8 @@ function App() {
       rawProgress[word].shows += result[word].shows
       rawProgress[word].progress += result[word].progress
       const progress = rawProgress[word].progress / rawProgress[word].shows
+      const ind = storageGroups.groupB[group].indexOf(word)
       if (rawProgress[word].shows >= 5) {
-        const ind = storageGroups.groupB[group].indexOf(word)
         if (progress >= 0.9) {
           if (ind !== -1) {
             storageGroups.groupB[group].splice(ind, 1)
@@ -146,6 +146,11 @@ function App() {
             rawProgress[word].shows = 0
             rawProgress[word].progress = 0
           }
+        }
+      } else {
+        if (ind !== -1) {
+          storageGroups.groupB[group].splice(ind, 1)
+          storageGroups.groupB[group].push(word)
         }
       }
     })
