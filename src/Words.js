@@ -44,7 +44,7 @@ const Words = ({ words, groups, trainingGroups, onChange, step }) => {
         training.push(el)
       }
       if (!emptyA) {
-        trainingGroups.groupB[group].slice(0, COUNT-training.length).forEach(it => data.push(it))
+        trainingGroups.groupB[group].slice(0, COUNT-training.length).forEach(it => training.push(it))
       }
       const delta = COUNT - training.length
       if (delta > 0) {
