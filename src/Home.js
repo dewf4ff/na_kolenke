@@ -36,7 +36,7 @@ const Home = ({ groups, words }) => {
         })}
       </div>
       <div className="row mt-3">
-      <div className="col-2"><b>Всего слов: {words.length} Осталось: {words.length - Object.keys(globalGroups.groupC).reduce((res, it) => res += globalGroups.groupC[it].length, 0)}</b></div>
+      <div className="col-4"><b>Всего слов: {words.length} Осталось: {words.length - Object.keys(globalGroups.groupC).reduce((res, it) => res += globalGroups.groupC[it].length, 0)}</b></div>
       </div>
     </div>
   )
