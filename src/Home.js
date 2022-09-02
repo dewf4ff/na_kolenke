@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import storage from "./common/storage";
 const Home = ({ groups, words }) => {
   const [progress, setProgress] = useState(null);
+  const [globalGroups, setGroups] = useState(null);
   useEffect(() => {
     const a = storage.getProgress()
     const storageGroups = storage.getGroups()
@@ -9,8 +10,10 @@ const Home = ({ groups, words }) => {
     groups.forEach(group => {
       globalProgress[group] = storageGroups.groupC[group].length || 0
     })
+    setGroups(storageGroups)
     setProgress(globalProgress)
   }, [])
+  if (!globalGroups) return null;
   return (
     <div className="row">
       <div className="col">
@@ -33,7 +36,7 @@ const Home = ({ groups, words }) => {
         })}
       </div>
       <div className="row mt-3">
-      <div className="col-2"><b>Всего слов: {words.length}</b></div>
+      <div className="col-2"><b>Всего слов: {words.length} Осталось: {words.length - Object.keys(globalGroups.groupC).reduce((res, it) => res += globalGroups.groupC[it].length, 0)}</b></div>
       </div>
     </div>
   )
