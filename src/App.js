@@ -117,6 +117,9 @@ function App() {
             rawProgress[word].shows = 0
             rawProgress[word].progress = 0
           }
+        } else {
+          rawProgress[word].shows = 0
+          rawProgress[word].progress = 0
         }
       }
     })
