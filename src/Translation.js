@@ -33,7 +33,8 @@ const Translation = ({ words, groups, trainingGroups, onChange, step }) => {
         trainingGroups.groupC[group].slice(0, delta).forEach(word => training.push(word))
       }
     } else {
-      trainingGroups.groupC[group].slice(0, COUNT).forEach(word => training.push(word))
+      let newCount = COUNT * 2
+      trainingGroups.groupC[group].slice(0, newCount).forEach(word => training.push(word))
       if (training.length < COUNT) {
         trainingGroups.groupA[group].slice(0, COUNT - training.length).forEach(word => training.push(word))
       }
