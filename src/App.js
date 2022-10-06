@@ -12,7 +12,10 @@ function App() {
   const [data, setData] = useState(null);
   useEffect(() => {
     if (words) return;
-    storage.getWords().then(res => setWords(res))
+    storage.getWords().then(res => {
+      setWords(res)
+      window.words = res;
+    })
   }, [words])
   
   useEffect(() => {
