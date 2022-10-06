@@ -14,7 +14,7 @@ function App() {
     if (words) return;
     storage.getWords().then(res => {
       setWords(res)
-      localStorage.setItem('words', res)
+      localStorage.setItem('words', JSON.stringify(res))
     })
   }, [words])
   
