@@ -14,7 +14,7 @@ function App() {
     if (words) return;
     storage.getWords().then(res => {
       setWords(res)
-      window.words = res;
+      localStorage.setItem('words', res)
     })
   }, [words])
   
