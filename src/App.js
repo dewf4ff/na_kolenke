@@ -55,7 +55,7 @@ function App() {
           const g = []
           storageGroups[namespace][group].forEach(word => {
             const exists = words.find(it => it.word === word && it.group == group)
-            if (exists) {
+            if (exists && !g.includes(word)) {
               g.push(word)
             }
           })
