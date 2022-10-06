@@ -51,7 +51,7 @@ function App() {
         Object.keys(storageGroups[namespace]).forEach(group => {
           const g = []
           storageGroups[namespace][group].forEach(word => {
-            const exists = words.find(it => it.word === word)
+            const exists = words.find(it => it.word === word && it.group == group)
             if (exists) {
               g.push(word)
             }
