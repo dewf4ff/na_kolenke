@@ -228,7 +228,7 @@ function App() {
           </nav>
         </div>
         <Routes>
-          <Route path="/" element={<Home groups={data.groups} words={data.words} />} />
+          <Route path="/" element={<Home groups={data.groups} words={data.words} />} /> 
           <Route path="/words" element={<Words onChange={onChange} step={data.step} words={words} groups={data.groups} trainingGroups={data.data} />} />
           <Route path="/translation" element={<Translation onChange={onChange} step={data.step} words={words} groups={data.groups} trainingGroups={data.data}/>} />
           <Route path="/exam" element={<Exam onChange={updateAfterExam} words={words} groups={data.groups} />} />

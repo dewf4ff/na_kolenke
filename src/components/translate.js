@@ -9,6 +9,8 @@ function TransitionTraining({ group, words, type, onFinish, training, trainingGr
   const [ready, setReady] = useState(false)
   const [result, setResult] = useState([])
   const [currAnswer, setAnswer] = useState(null)
+
+  console.log('training',training, 'trainingGroups', trainingGroups)
   useEffect(() => {
     const trainingWords = []
     const wordsGroup = words.filter(word => word.group === group)
